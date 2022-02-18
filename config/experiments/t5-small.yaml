@@ -1,0 +1,15 @@
+# @package _global_
+defaults:
+  - /default
+  - _self_
+
+backbone: 't5-small'
+
+# # disabling scheduler bc it is causing issues for now
+model:
+  transformer:
+    max_length: 64
+  scheduler: null
+
+env:
+  run_name: t5-large_${now:%Y-%m-%d}_${now:%H-%M-%S}
