@@ -1,15 +1,31 @@
 # @package _global_
 defaults:
-  - /default
+  - /train_default
+  - /data.dataset@data.train_split_config: qasper
+  - /data.dataset@data.valid_split_config: qasper
+  - /metric.text@model.metrics.rouge: rouge
+  - /model.optimizer@model.optimizer: adamw
+  - /model.scheduler@model.scheduler: linear_schedule_with_warmup
   - _self_
+
 
 backbone: 't5-small'
 
-# # disabling scheduler bc it is causing issues for now
+data:
+  batch_size: 12
+  train_split_config:
+    loader:
+      split: train
+    mapper:
+      target_max_length: ${model.transformer.max_length}
+  valid_split_config:
+    loader:
+      split: valid
+
 model:
   transformer:
     max_length: 64
-  scheduler: null
+
 
 env:
-  run_name: t5-large_${now:%Y-%m-%d}_${now:%H-%M-%S}
+  run_name: t5-small_${now:%Y-%m-%d}_${now:%H-%M-%S}

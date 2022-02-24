@@ -3,20 +3,20 @@ from typing import List
 
 
 
-@HydraRegistry(name='adam', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='adam', group='model.optimizer')
 class AdamConfig(FlexibleConfig):
     _target_: str = 'torch.optim.Adam'
     lr: float = 1e-5
 
 
-@HydraRegistry(name='adamw', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='adamw', group='model.optimizer')
 class AdamWConfig(FlexibleConfig):
     _target_: str = 'torch.optim.AdamW'
     lr: float = 1e-5
     weight_decay: float = 0.001
 
 
-@HydraRegistry(name='fused_adam', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='fused_adam', group='model.optimizer')
 class DeepSpeedFusedAdamConfig(FlexibleConfig):
     _target_: str = 'deepspeed.ops.adam.FusedAdam'
     lr: float = 1e-5
@@ -26,7 +26,7 @@ class DeepSpeedFusedAdamConfig(FlexibleConfig):
     adam_w_mode: bool = False
 
 
-@HydraRegistry(name='deepspeed_fused_adam', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='deepspeed_fused_adam', group='model.optimizer')
 class DeepSpeedFusedAdamConfig(FlexibleConfig):
     _target_: str = 'deepspeed.ops.adam.FusedAdam'
     lr: float = 1e-5
@@ -35,7 +35,7 @@ class DeepSpeedFusedAdamConfig(FlexibleConfig):
     weight_decay: float = 3e-7
 
 
-@HydraRegistry(name='deepspeed_cpu_adam', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='deepspeed_cpu_adam', group='model.optimizer')
 class DeepSpeedCPUAdamConfig(FlexibleConfig):
     _target_: str = 'deepspeed.ops.adam.DeepSpeedCPUAdam'
     lr: float = 1e-5
@@ -44,7 +44,7 @@ class DeepSpeedCPUAdamConfig(FlexibleConfig):
     weight_decay: float = 3e-7
 
 
-@HydraRegistry(name='deepspeed_one_bit_adam', group='model.optimizer', auto_dc=True)
+@HydraRegistry(name='deepspeed_one_bit_adam', group='model.optimizer')
 class DeepSpeedOnebitAdamConfig(FlexibleConfig):
     _target_: str = 'deepspeed.ops.adam.OnebitAdam'
     lr: float = 1e-5
