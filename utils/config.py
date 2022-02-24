@@ -7,7 +7,6 @@ from typing import Any, Callable, Dict, List, Union, Optional, Type
 import yaml
 
 import hydra
-from hydra.conf import HydraConf
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING, DictConfig, ListConfig, OmegaConf
 
@@ -34,7 +33,6 @@ class HydraDefaults:
             key = f'override {key}'
         return {key: value}
 
-
     @staticmethod
     def self_() -> OverideType:
         return '_self_'
@@ -60,8 +58,8 @@ class HydraRegistry:
     def field(*args: List[Any], **kwargs: Dict[str, Any]) -> Field:
         if len(args) > 0 and len(kwargs) > 0:
             error_msg = ('When using HydraRegistry.field, provide either args'
-                        f'or kwargs, but not both (len args: {len(args)}; '
-                        f'len kwargs: {len(kwargs)})')
+                         f'or kwargs, but not both (len args: {len(args)}; '
+                         f'len kwargs: {len(kwargs)})')
             raise ValueError(error_msg)
         if len(args) > 0:
             return field(default_factory=lambda: args)
@@ -132,11 +130,22 @@ class BasePrimaryConfig:
         return hydra.main(config_name=config_name, config_path=config_path)(main_func)
 
 
-class FlexibleConfig:
+class FlexibleConfigType(type):
+    """Flexible configs can be initialized from dictionaries, so we allow
+    some slack in the type check"""
+
+    def __subclasscheck__(self, subclass: type) -> bool:
+        return super().__subclasscheck__(subclass) or issubclass(subclass, dict)
+
+
+class FlexibleConfig(metaclass=FlexibleConfigType):
     @classmethod
     def flexible(cls):
+        """A flexible config can be subbed by a dictionary, so we allow some slack
+        in the default constructor by returnign an omegaconf instead"""
         assert is_dataclass(cls), f"{cls.__name__} must be a dataclass"
 
         cfg = OmegaConf.structured(cls)
+        # non strict mode with False
         OmegaConf.set_struct(cfg, False)
         return cfg

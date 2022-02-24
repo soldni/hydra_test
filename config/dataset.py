@@ -1,5 +1,6 @@
 from typing import Optional
 from utils.config import HydraRegistry, HydraDefaults
+from config.huggingface import AutoTokenizerConfig
 
 
 @HydraRegistry(name='default', group='data.loader')
@@ -15,7 +16,7 @@ class GenerationMapper:
   _target_: str = 'data.mappers.Seq2SeqFeaturesMapper'
   source_column_name: str = HydraRegistry.missing()
   target_column_name: str = HydraRegistry.missing()
-  tokenizer: HydraRegistry.config_type() = HydraRegistry.missing()
+  tokenizer: AutoTokenizerConfig = HydraRegistry.missing()
   target_max_length: Optional[int] = None
   truncate_source: bool = True
 
