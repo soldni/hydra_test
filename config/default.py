@@ -75,6 +75,33 @@ class TrainConfig(BasePrimaryConfig):
     # hack is necessary because subclassing HydraConf
     # creates issues with searchpath
     hydra: HydraRegistry.config_type() =  HydraRegistry.field(
-        run={"dir": "${env.root_dir}/${env.run_name}/logs"},
+        run={"dir": "${env.root_dir}/${env.run_name}/train_logs"},
+        output_subdir=None
+    )
+
+
+@HydraRegistry(name='eval_default')
+class EvalConfig(BasePrimaryConfig):
+    defaults: HydraDefaults.type_() = HydraDefaults(
+        HydraDefaults.self_(),
+        HydraDefaults.default_(key='model', value='generation'),
+        HydraDefaults.default_(key='data', value='generation')
+    )
+    backbone: str = HydraRegistry.missing()
+    env: EnvConfig = EnvConfig()
+
+    checkpoint_path: Optional[str] = None
+
+    trainer: TrainerConfig = TrainerConfig()
+    model: GenerationModelConfig = HydraRegistry.missing()
+    data: GenerationDataConfig = HydraRegistry.missing()
+
+    # configuring hydra's option has to be done through
+    # a bit of a hack. Inspiration comes mostly from this
+    # https://github.com/facebookresearch/hydra/issues/1903
+    # hack is necessary because subclassing HydraConf
+    # creates issues with searchpath
+    hydra: HydraRegistry.config_type() = HydraRegistry.field(
+        run={"dir": "${env.root_dir}/${env.run_name}/eval_logs"},
         output_subdir=None
     )
